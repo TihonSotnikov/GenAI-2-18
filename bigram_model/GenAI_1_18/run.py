@@ -1,12 +1,12 @@
 import math
 from pathlib import Path
 import nltk
-
 from .model import BigramModel
 from ..data_utils import load_and_prepare_data
 
 OUTPUT_FILE = Path(__file__).resolve().parents[2] / "figures" / "genai_1_results.txt"
 SEED_WORDS = "in the"
+
 
 def run_task() -> None:
     """
