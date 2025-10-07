@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import List
 import nltk
 from ..GenAI_1_18.model import BigramModel
 from ..data_utils import load_and_prepare_data
@@ -10,7 +11,7 @@ MEANINGFUL_SENTENCE = "the price of crude oil has risen sharply"
 RANDOM_SENTENCE = "colorless green ideas sleep furiously"
 
 
-def _prepare_and_train_model():
+def prepare_and_train_model() -> BigramModel:
     """Загрузка данных и обучение модели."""
 
     try:
@@ -23,7 +24,12 @@ def _prepare_and_train_model():
     return model
 
 
-def _format_results(meaningful, random, perplex_meaningful, perplex_random):
+def format_results(
+    meaningful: str,
+    random: str,
+    perplex_meaningful: float,
+    perplex_random: float
+) -> str:
     """Формирует человекочитаемый отчёт."""
 
     lines = [
@@ -46,26 +52,26 @@ def _format_results(meaningful, random, perplex_meaningful, perplex_random):
     return "\n".join(lines)
 
 
-def run_task(path_to_save_results=OUTPUT_FILE) -> None:
+def run_task(path_to_save_results: Path = OUTPUT_FILE) -> None:
     """Функция для выполнения GenAI-2-18."""
 
     # --- Подготовка модели ---
-    model = _prepare_and_train_model()
+    model = prepare_and_train_model()
 
     # --- Подготовка данных ---
-    meaningful_tokens = [w.lower() for w in nltk.word_tokenize(MEANINGFUL_SENTENCE)]
-    random_tokens = [w.lower() for w in nltk.word_tokenize(RANDOM_SENTENCE)]
+    meaningful_tokens: List[str] = [w.lower() for w in nltk.word_tokenize(MEANINGFUL_SENTENCE)]
+    random_tokens: List[str] = [w.lower() for w in nltk.word_tokenize(RANDOM_SENTENCE)]
 
     # --- Вычисление перплексии ---
     print("Start measuring the perplexity of the model\n")
 
-    perplexity_meaningful = calculate_perplexity(model, meaningful_tokens)
-    perplexity_random = calculate_perplexity(model, random_tokens)
+    perplexity_meaningful: float = calculate_perplexity(model, meaningful_tokens)
+    perplexity_random: float = calculate_perplexity(model, random_tokens)
 
     print("Model perplexity measured\n")
     
     # --- Формирование и вывод результатов ---
-    results_output = _format_results(
+    results_output: str = format_results(
         MEANINGFUL_SENTENCE,
         RANDOM_SENTENCE,
         perplexity_meaningful,

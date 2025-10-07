@@ -1,6 +1,7 @@
 import math
 import nltk
 from pathlib import Path
+from typing import List, Tuple
 from .model import BigramModel
 from ..data_utils import load_and_prepare_data
 
@@ -11,7 +12,7 @@ TEST_SENTENCE = "detectives with his picture in hand were on the trail of cal ba
 GENERATED_WORDS_COUNT = 10
 
 
-def prepare_and_train_model():
+def prepare_and_train_model() -> BigramModel:
     """Загрузка данных и обучение модели."""
 
     try:
@@ -24,7 +25,13 @@ def prepare_and_train_model():
     return model
 
 
-def format_results(seed_words, generated_text, test_sentence, log_prob, prob):
+def format_results(
+    seed_words: str,
+    generated_text: str,
+    test_sentence: str,
+    log_prob: float,
+    prob: float
+) -> str:
     """Формирует человекочитаемый отчёт."""
 
     lines = [
@@ -49,7 +56,7 @@ def format_results(seed_words, generated_text, test_sentence, log_prob, prob):
     return "\n".join(lines)
 
 
-def run_task(path_to_save_results=OUTPUT_FILE) -> None:
+def run_task(path_to_save_results: Path = OUTPUT_FILE) -> None:
     """Функция для выполнения GenAI-1-18."""
 
     # --- Подготовка модели ---
