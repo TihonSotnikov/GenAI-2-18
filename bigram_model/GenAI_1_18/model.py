@@ -2,6 +2,7 @@ from nltk.lm import Lidstone
 from nltk.lm.vocabulary import Vocabulary
 from typing import List, Iterable
 
+
 class BigramModel:
     """
     Класс-обертка для биграммной статистической языковой модели на основе NLTK.
@@ -24,7 +25,7 @@ class BigramModel:
 
         if n_gram_order < 2:
             raise ValueError("N-gram order must be at least 2 for this model.")
-        
+
         self.order = n_gram_order
         self.model = Lidstone(order=self.order, gamma=gamma)
         self.trained = False
@@ -35,7 +36,7 @@ class BigramModel:
 
         Parameters
         ----------
-        train_data : Iterable 
+        train_data : Iterable
             Подготовленные n-граммы для обучения (обычно генератор).
         vocab : nltk.lm.vocabulary.Vocabulary
             Объект словаря, созданный NLTK.
@@ -54,7 +55,7 @@ class BigramModel:
         self.trained = True
         print("Model training complete.\n")
 
-    def generate_text(self, num_words: int, text_seed: List[str]) -> List[str]:
+    def generate_text(self, num_words: int, text_seed: List[str], filter_service_tokins: bool = True) -> List[str]:
         """
         Генерирует текст с помощью обученной модели.
 
@@ -64,10 +65,12 @@ class BigramModel:
             Количество слов для генерации.
         text_seed : list[str]
             Начальная последовательность слов. Длина должна быть >= (order - 1).
+        filter_service_tokens : bool
+            Производить ли фильтрацию системных токенов в сгенерированном тексте. 
 
         Returns
         -------
-        list[str] 
+        list[str]
             Список сгенерированных токенов.
 
         Raises
@@ -84,8 +87,11 @@ class BigramModel:
             raise ValueError(f"text_seed must contain at least {self.order - 1} tokens for a model of order {self.order}.")
 
         print(f"Generating {num_words} words with seed: \"{' '.join(text_seed)}\"...\n")
-        return [word for word in self.model.generate(num_words, text_seed=text_seed) if word not in ["<UNK>", "<s>", "</s>"]]
-    
+        return [
+            word for word in self.model.generate(num_words, text_seed=text_seed)
+            if not filter_service_tokins or word not in ["<UNK>", "<s>", "</s>"]
+        ]
+        
     def calculate_log_probability(self, sentence_tokens: List[str]) -> float:
         """
         Вычисляет логарифм вероятности предложения по основанию 2.

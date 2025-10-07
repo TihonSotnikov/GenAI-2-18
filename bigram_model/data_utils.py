@@ -21,7 +21,7 @@ def ensure_nltk_data() -> None:
             nltk.download(name)
 
 
-def load_and_prepare_data(n_gram_order: int = 2) -> Tuple[Iterable, Vocabulary]:
+def load_and_prepare_data(n_gram_order: int = 2, unk_cutoff: int = 2) -> Tuple[Iterable, Vocabulary]:
     """
     Загружает корпус brown, токенизирует его и подготавливает для обучения n-gram модели.
 
@@ -31,6 +31,8 @@ def load_and_prepare_data(n_gram_order: int = 2) -> Tuple[Iterable, Vocabulary]:
         Категория текстов из корпуса brown.
     n_gram_order : int
         Порядок n (для n-граммной модели).
+    unk_cutoff : int
+        Слова, встречающиеся реже этого значения, не считаются частью словаря.
 
     Returns
     -------
@@ -48,10 +50,12 @@ def load_and_prepare_data(n_gram_order: int = 2) -> Tuple[Iterable, Vocabulary]:
     print("Loading the entire brown corpus...")
 
     text_sents = [[word.lower() for word in sent] for sent in brown.sents()]
-    vocab = Vocabulary((word for sent in text_sents for word in sent), unk_cutoff=2)
+    vocab = Vocabulary((word for sent in text_sents for word in sent), unk_cutoff=unk_cutoff)
     train_data, _ = padded_everygram_pipeline(n_gram_order, text_sents)
 
     print("Data preparation complete.")
     return train_data, vocab
 
-load_and_prepare_data()
+
+if __name__ == "__main__":
+    load_and_prepare_data()

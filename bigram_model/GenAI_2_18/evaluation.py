@@ -20,8 +20,6 @@ def calculate_perplexity(model: BigramModel, sentence_tokens: List[str]) -> floa
         Значение перплексии. Возвращает float('inf'), если вероятность равна нулю.
     """
 
-    print("Start measuring the perplexity of the model\n")
-
     log_prob = model.calculate_log_probability(sentence_tokens)
 
     N = len(sentence_tokens)
@@ -29,7 +27,5 @@ def calculate_perplexity(model: BigramModel, sentence_tokens: List[str]) -> floa
         return 0.0
 
     perplexity = math.pow(2, (-1/N) * log_prob)
-
-    print("Model perplexity measured\n")
 
     return perplexity

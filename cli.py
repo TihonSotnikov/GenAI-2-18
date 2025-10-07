@@ -82,10 +82,7 @@ def run_cli() -> None:
 
     args = parse_arguments()
 
-    if args.GenAI_1_18:
-        task_key = "GenAI_1_18"
-    else:
-        task_key = "GenAI_2_18"
+    task_key = "GenAI_1_18" if args.GenAI_1_18 else DEFAULT_TASK_KEY
 
     task_to_run = TASKS[task_key]
 
