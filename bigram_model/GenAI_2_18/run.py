@@ -7,7 +7,7 @@ from .evaluation import calculate_perplexity
 OUTPUT_FILE = Path(__file__).resolve().parents[2] / "figures" / "genai_2_results.txt"
 
 
-def run_task() -> None:
+def run_task(path_to_save_results=OUTPUT_FILE) -> None:
     """
     Функция для выполнения GenAI-2-18.
     """
@@ -52,10 +52,12 @@ def run_task() -> None:
 
     print(results_output)
 
-    with open(OUTPUT_FILE, 'w', encoding="utf-8") as f:
-        f.write(results_output)
-
-    print(f"Results successfully saved to \"{OUTPUT_FILE}\"")
+    try:
+        with open(path_to_save_results, 'w', encoding="utf-8") as f:
+            f.write(results_output)
+            print(f"Results successfully saved to \"{path_to_save_results}\"\n")
+    except FileExistsError or FileNotFoundError as e:
+        print(f"Error writing result to file: {e}")
 
 
 if __name__ == '__main__':

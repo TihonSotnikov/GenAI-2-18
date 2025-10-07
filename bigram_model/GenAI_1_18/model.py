@@ -49,10 +49,10 @@ class BigramModel:
         if self.trained:
             raise RuntimeError("Model is already trained. Create a new instance to retrain.")
 
-        print("Training the model...")
+        print("Training the model...\n")
         self.model.fit(train_data, vocab)
         self.trained = True
-        print("Model training complete.")
+        print("Model training complete.\n")
 
     def generate_text(self, num_words: int, text_seed: List[str]) -> List[str]:
         """
@@ -83,7 +83,7 @@ class BigramModel:
         if len(text_seed) < self.order - 1:
             raise ValueError(f"text_seed must contain at least {self.order - 1} tokens for a model of order {self.order}.")
 
-        print(f"Generating {num_words} words with seed: \"{' '.join(text_seed)}\"...")
+        print(f"Generating {num_words} words with seed: \"{' '.join(text_seed)}\"...\n")
         return [word for word in self.model.generate(num_words, text_seed=text_seed) if word not in ["<UNK>", "<s>", "</s>"]]
     
     def calculate_log_probability(self, sentence_tokens: List[str]) -> float:
